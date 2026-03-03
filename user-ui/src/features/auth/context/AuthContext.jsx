@@ -29,14 +29,14 @@ export function AuthProvider({ children }) {
     })
   }
   const register = async (payload) => {
-    const userEntity = userEntity({
+    const newUserEntity = userEntity({
       Email: payload.email,
       Password: payload.password,
       FirstName: payload.firstName,
       LastName: payload.lastName,
     })
 
-    const response = await userService.register(userEntity.toJSON())
+    const response = await userService.register(newUserEntity.toJSON())
 
     if (!response.ok) {
       return {
@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
       }
     }
 
-    const registeredUser = mapApiPayloadToUser(response.data || userEntity)
+    const registeredUser = mapApiPayloadToUser(response.data || newUserEntity)
     setUser(safeUserEntity(registeredUser))
 
     return { success: true }

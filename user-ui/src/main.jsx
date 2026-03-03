@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
-import { AuthProvider } from './features/auth/context/AuthContext'
-import { FeedbackProvider } from './shared/context/FeedbackContext'
+import { AuthProvider } from './features/auth/context/AuthContext.jsx'
+import { FeedbackProvider } from './shared/context/FeedbackContext.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
