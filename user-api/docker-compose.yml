@@ -1,0 +1,35 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: user-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      Data__Default__ConnectionString: Host=postgres;Port=5432;Database=userDb;Username=postgres;Password=postgres
+      Data__Default__EnsureDatabaseIsCreated: "true"
+      Jwt__Key: YourSuperSecretKeyThatIsAtLeast32CharactersLong!
+      Jwt__Issuer: user-api
+      Jwt__Audience: user-api-clients
+      Jwt__ExpiryMinutes: "60"
+      Cors__AllowedOrigins__0: http://localhost:3000
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: user-postgres
+    environment:
+      POSTGRES_DB: userDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
