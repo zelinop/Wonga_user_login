@@ -11,6 +11,8 @@ namespace user_api
 {
     public class Program
     {
+        private const string FrontendCorsPolicy = "AllowedCors";
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +30,34 @@ namespace user_api
             builder.Services.AddSwaggerGen();
             builder.Services.AddMediatR(typeof(AddUserHandler).Assembly);
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+            var allowedOrigins = builder.Configuration
+                .GetSection("Cors:AllowedOrigins")
+                .Get<string[]>() ?? Array.Empty<string>();
+
+            if (allowedOrigins.Length == 0)
+            {
+                throw new InvalidOperationException("Cors:AllowedOrigins is not configured.");
+            }
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(FrontendCorsPolicy, policy =>
+                {
+                    policy
+                        .WithOrigins(allowedOrigins)
+                        .WithHeaders(
+                            "Authorization",
+                            "Origin",
+                            "X-Requested-With",
+                            "Content-Type",
+                            "Accept",
+                            "Access-Control-Request-Method",
+                            "Access-Control-Request-Headers",
+                            "Cache-Control")
+                        .AllowAnyMethod();
+                });
+            });
 
             // JWT Authentication
             var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -70,6 +100,7 @@ namespace user_api
             }
 
             app.UseHttpsRedirection();
+            app.UseCors(FrontendCorsPolicy);
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
