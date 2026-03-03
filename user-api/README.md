@@ -42,4 +42,13 @@ Authorization: Bearer <token>
 
 ```bash
 dotnet test user-api.Tests/user-api.Tests.csproj
+dotnet test user-api.IntegrationTests/user-api.IntegrationTests.csproj
+```
+
+## Build script
+
+PowerShell:
+
+```powershell
+./build.ps1
 ```

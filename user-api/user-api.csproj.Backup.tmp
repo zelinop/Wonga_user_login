@@ -31,13 +31,8 @@
 
   <ItemGroup>
     <Compile Remove="user-api.Tests\**\*.cs" />
-    <Compile Remove="user-api.IntegrationTests\**\*.cs" />
-    <Content Remove="user-api.Tests\**\*" />
-    <Content Remove="user-api.IntegrationTests\**\*" />
     <EmbeddedResource Remove="user-api.Tests\**\*" />
-    <EmbeddedResource Remove="user-api.IntegrationTests\**\*" />
     <None Remove="user-api.Tests\**\*" />
-    <None Remove="user-api.IntegrationTests\**\*" />
   </ItemGroup>
 
 </Project>
