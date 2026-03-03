@@ -1,0 +1,11 @@
+# ------------------------------
+# Root ignores for split UI/API repo
+# ------------------------------
+
+# API (.NET) build artifacts
+user-api/bin/
+user-api/obj/
+user-api/*.user
+
+# UI local env (machine-specific)
+user-ui/.env
