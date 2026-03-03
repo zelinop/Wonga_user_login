@@ -47,7 +47,7 @@ export class UserService {
     }
   }
   async register(user) {
-    return this.request('', {
+    return this.request('register', {
       method: 'POST',
       body: JSON.stringify(user),
     })
@@ -58,8 +58,15 @@ export class UserService {
       body: JSON.stringify(credentials),
     })
   }
-  async getById(id) {
-    return this.request(id, { method: 'GET' })
+  async getById(id, token) {
+    return this.request(`user/${id}`, {
+      method: 'GET',
+      headers: token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : {},
+    })
   }
 }
 

@@ -9,13 +9,7 @@ function PrivateRoute({ component, layout }) {
       <Navigate
         to="/login"
         replace
-        state={{
-          from: location,
-          authError: {
-            type: 'access_denied',
-            message: 'You do not have the necessary access for this page.',
-          },
-        }}
+        state={{ from: location }}
       />
     )
   }

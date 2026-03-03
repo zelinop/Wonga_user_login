@@ -18,14 +18,14 @@ export function AuthProvider({ children }) {
     clearCurrentUser()
   }, [user])
   const mapApiPayloadToUser = (payload) => {
-    const source = payload || {}
+    const source = payload?.user || payload || {}
 
     return userEntity({
-      Id: source.Id,
-      Email: source.Email,
-      Password: source.Password,
-      FirstName: source.FirstName,
-      LastName: source.LastName,
+      Id: source.Id ?? source.id,
+      Email: source.Email ?? source.email,
+      Password: source.Password ?? source.password,
+      FirstName: source.FirstName ?? source.firstName,
+      LastName: source.LastName ?? source.lastName,
     })
   }
   const register = async (payload) => {
@@ -47,7 +47,8 @@ export function AuthProvider({ children }) {
       }
     }
 
-    const registeredUser = mapApiPayloadToUser(response.data || newUserEntity)
+    const mappedUser = mapApiPayloadToUser(response.data)
+    const registeredUser = mappedUser.Email ? mappedUser : newUserEntity
     setUser(safeUserEntity(registeredUser))
 
     return { success: true }
@@ -68,6 +69,7 @@ export function AuthProvider({ children }) {
     }
 
     const authenticatedUser = mapApiPayloadToUser(response.data)
+    const token = response.data?.token
 
     if (!authenticatedUser.Email) {
       return {
@@ -77,7 +79,39 @@ export function AuthProvider({ children }) {
       }
     }
 
-    setUser(safeUserEntity(authenticatedUser))
+    if (!authenticatedUser.Id || !token) {
+      return {
+        success: false,
+        message: 'Missing user id or token in login response.',
+        reason: 'api',
+      }
+    }
+
+    const userDetailsResponse = await userService.getById(authenticatedUser.Id, token)
+
+    if (!userDetailsResponse.ok) {
+      return {
+        success: false,
+        message: userDetailsResponse.error || 'Failed to load user details.',
+        status: userDetailsResponse.status,
+        reason:
+          userDetailsResponse.status === 401 || userDetailsResponse.status === 403
+            ? 'access'
+            : 'api',
+      }
+    }
+
+    const hydratedUser = mapApiPayloadToUser(userDetailsResponse.data)
+
+    if (!hydratedUser.Email) {
+      return {
+        success: false,
+        message: 'Invalid user details payload from API.',
+        reason: 'api',
+      }
+    }
+
+    setUser(safeUserEntity(hydratedUser))
 
     return { success: true }
   }

@@ -39,7 +39,11 @@ namespace user_api.Controllers
                     return StatusCode(StatusCodes.Status400BadRequest, "Error adding user to the database.");
                 }
 
-                return StatusCode(StatusCodes.Status200OK, new { message = $"User '{user.Email}' added successfully" });
+                return StatusCode(StatusCodes.Status200OK, new
+                {
+                    user = registerUser,
+                    message = $"User '{user.Email}' added successfully"
+                });
             }
             catch (Exception exception)
             {
@@ -61,7 +65,12 @@ namespace user_api.Controllers
                 }
 
                 var token = _jwtTokenService.GenerateToken(user);
-                return Ok(new { token, message = $"User '{dto.Email}' logged in successfully" });
+                return Ok(new
+                {
+                    token,
+                    user,
+                    message = $"User '{dto.Email}' logged in successfully"
+                });
             }
             catch (UnauthorizedAccessException)
             {
