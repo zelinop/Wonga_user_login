@@ -1,3 +1,5 @@
 <Solution>
   <Project Path="user-api.csproj" />
+  <Project Path="user-api.IntegrationTests/user-api.IntegrationTests.csproj" />
+  <Project Path="user-api.Tests/user-api.Tests.csproj" />
 </Solution>
