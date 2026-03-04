@@ -9,7 +9,12 @@ function PrivateRoute({ component, layout }) {
       <Navigate
         to="/login"
         replace
-        state={{ from: location }}
+        state={{
+          from: location,
+          authError: {
+            message: 'Your session is no longer available. Please sign in again.',
+          },
+        }}
       />
     )
   }

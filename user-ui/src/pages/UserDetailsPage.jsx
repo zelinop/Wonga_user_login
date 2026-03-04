@@ -1,8 +1,8 @@
 import PageCard from '../shared/components/PageCard'
-import { useUserDetailsPageLogic } from './hooks/useUserDetailsPageLogic'
+import { useAuth } from '../features/auth/hooks/useAuth'
 
 function UserDetailsPage() {
-  const { user, logout } = useUserDetailsPageLogic()
+  const { user, logout } = useAuth()
 
   if (!user) {
     return null
